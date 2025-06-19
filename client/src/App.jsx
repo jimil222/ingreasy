@@ -5,7 +5,8 @@ import './App.css'
 import { Route, Routes } from 'react-router-dom'
 import Home from './pages/Home'
 import Navbar from './components/Navbar'
-import ProtectedRoute from './lib/ProtectedRoute,jsx'
+import ProtectedRoute from './lib/ProtectedRoute.jsx'
+import Footer from './components/Footer.jsx'
 import Dashboard from './pages/Dashboard'
 
 function App() {
@@ -26,6 +27,7 @@ function App() {
             }
           />
         </Routes>
+      <Footer/>
       </div>
     </>
   )
