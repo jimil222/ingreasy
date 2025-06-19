@@ -1,11 +1,7 @@
-import React from 'react'
+import DashboardLayout from "../components/dashboardLayout"
 
-function Dashboard() {
-  return (
-    <div>
-      <p>Hello welcome to the dashboard page</p>
-    </div>
-  )
+const Dashboard = () => {
+  return <DashboardLayout />
 }
 
 export default Dashboard
