@@ -9,7 +9,7 @@ const Sidebar = ({ activeTab, setActiveTab, isMobileMenuOpen, setIsMobileMenuOpe
 
   return (
     <>
-      {/* Menu Button - Always visible on all screens */}
+      
       <button
         className="fixed top-24 left-4 z-40 p-2 bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow"
         onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
@@ -17,7 +17,6 @@ const Sidebar = ({ activeTab, setActiveTab, isMobileMenuOpen, setIsMobileMenuOpe
         <Menu className="w-6 h-6 text-gray-600" />
       </button>
 
-      {/* Overlay - Shows when sidebar is open */}
       {isMobileMenuOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 z-30" onClick={() => setIsMobileMenuOpen(false)} />
       )}

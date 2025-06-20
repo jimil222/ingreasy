@@ -13,7 +13,6 @@ const Home = () => {
       <HeroSection />
       <HowItWorks />
       <Features />
-      <Footer />
     </div>
   )
 }
