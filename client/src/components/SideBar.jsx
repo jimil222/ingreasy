@@ -1,15 +1,18 @@
 import { Camera, History, User, X, Menu } from "lucide-react"
+import { useLocation, useNavigate } from "react-router-dom"
 
-const Sidebar = ({ activeTab, setActiveTab, isMobileMenuOpen, setIsMobileMenuOpen }) => {
+const Sidebar = ({ isMobileMenuOpen, setIsMobileMenuOpen }) => {
+  const location = useLocation()
+  const navigate = useNavigate()
+
   const menuItems = [
-    { id: "scan", label: "Scan", icon: Camera },
-    { id: "history", label: "History", icon: History },
-    { id: "profile", label: "Profile", icon: User },
+    { path: "/dashboard", label: "Scan", icon: Camera },
+    { path: "/dashboard/history", label: "History", icon: History },
+    { path: "/dashboard/profile", label: "Profile", icon: User },
   ]
 
   return (
     <>
-      
       <button
         className="fixed top-24 left-4 z-40 p-2 bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow"
         onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
@@ -29,7 +32,6 @@ const Sidebar = ({ activeTab, setActiveTab, isMobileMenuOpen, setIsMobileMenuOpe
           ${isMobileMenuOpen ? "translate-x-0" : "-translate-x-full"}
         `}
       >
-        {/* Close Button inside sidebar */}
         <button
           className="absolute top-24 right-4 p-2 hover:bg-gray-100 rounded-lg transition-colors"
           onClick={() => setIsMobileMenuOpen(false)}
@@ -43,15 +45,17 @@ const Sidebar = ({ activeTab, setActiveTab, isMobileMenuOpen, setIsMobileMenuOpe
           <nav className="space-y-2">
             {menuItems.map((item) => {
               const Icon = item.icon
+              const isActive = location.pathname === item.path
+
               return (
                 <button
-                  key={item.id}
+                  key={item.path}
                   onClick={() => {
-                    setActiveTab(item.id)
-                    setIsMobileMenuOpen(false) // Close sidebar after selection
+                    navigate(item.path)
+                    setIsMobileMenuOpen(false)
                   }}
                   className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors ${
-                    activeTab === item.id
+                    isActive
                       ? "bg-orange-100 text-orange-600 border-r-4 border-orange-500"
                       : "text-gray-600 hover:bg-gray-100"
                   }`}
