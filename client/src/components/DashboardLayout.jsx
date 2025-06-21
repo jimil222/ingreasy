@@ -6,6 +6,7 @@ import ProfileTab from "./ProfileTab"
 import { useUser } from "@clerk/clerk-react"
 import { useEffect } from "react"
 import axios from "axios"
+import { useAuth } from "@clerk/clerk-react"
 
 const DashboardLayout = () => {
   const [activeTab, setActiveTab] = useState("scan")
@@ -13,25 +14,35 @@ const DashboardLayout = () => {
 
   const { user } = useUser()
 
-  useEffect(() => {
-    const saveUser = async () => {
-      if (!user) return
+useEffect(() => {
+  const saveUser = async () => {
+    if (!user) return
 
-      try {
-        await axios.post("http://localhost:4000/api/user/save", {
+    try {
+      const token = await getToken({ template: "backend-auth" })
+      await axios.post("http://localhost:4000/api/user/save",
+        {
           clerkId: user.id,
           email: user.primaryEmailAddress.emailAddress,
           firstName: user.firstName,
           lastName: user.lastName,
           photo: user.imageUrl,
-        })
-      } catch (err) {
-        console.error("Failed to save user:", err)
-      }
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }
+      )
+    } catch (err) {
+      console.error("Failed to save user:", err)
     }
+  }
 
-    saveUser()
-  }, [user])
+  saveUser()
+}, [user])
+
+const { getToken } = useAuth() 
 
 
   const renderContent = () => {
