@@ -1,12 +1,12 @@
 import { useRef, useState } from "react"
 import { Camera, Sparkles, Upload } from "lucide-react"
-import axios from "axios" // 👇 Added for API calls
+import axios from "axios" 
 
 const ScanTab = () => {
   const fileInputRef = useRef(null)
   const [selectedFile, setSelectedFile] = useState(null)
-  const [isLoading, setIsLoading] = useState(false) // 👇 Spinner control
-  const [extractedText, setExtractedText] = useState("") // 👇 Show OCR result
+  const [isLoading, setIsLoading] = useState(false) 
+  const [extractedText, setExtractedText] = useState("")
 
   const handleFileChange = (e) => {
     const file = e.target.files[0]
@@ -21,20 +21,16 @@ const ScanTab = () => {
     if (!selectedFile) return alert("Please upload an image first!")
 
     try {
-      setIsLoading(true) // 👇 Start loader
+      setIsLoading(true) 
       setExtractedText("")
 
       const formData = new FormData()
       formData.append("image", selectedFile)
 
-      // 👇 Send image to backend for Tesseract OCR
       const response = await axios.post("http://localhost:4000/api/ocr/extract", formData)
 
       const { text } = response.data
       setExtractedText(text)
-
-      // 👇 Optional: navigate to /dashboard/generated-recipe after Gemini step
-      // navigate('/dashboard/generated-recipe', { state: { recipe } })
 
     } catch (err) {
       console.error("OCR failed:", err.message)
@@ -78,7 +74,7 @@ const ScanTab = () => {
 
             <button
               onClick={handleGenerate}
-              disabled={isLoading} // 👇 Disable while loading
+              disabled={isLoading} 
               className="flex items-center justify-center space-x-3 p-4 border-2 border-dashed border-orange-300 rounded-lg hover:border-orange-500 hover:bg-orange-50 transition-colors disabled:opacity-50"
             >
               <Sparkles className="w-5 h-5 lg:w-6 lg:h-6 text-orange-500 animate-spin" style={{ display: isLoading ? "inline" : "none" }} />
@@ -102,7 +98,7 @@ const ScanTab = () => {
               {extractedText && (
                 <div className="flex items-center space-x-2">
                   <div className="w-2 h-2 bg-orange-500 rounded-full flex-shrink-0"></div>
-                  <span>Detected Items: {extractedText}</span> {/* 👇 Show OCR result */}
+                  <span>Detected Items: {extractedText}</span> 
                 </div>
               )}
             </div>
