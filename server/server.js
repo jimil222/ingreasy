@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 import connectDB from './configs/mongodb.js';
 import userRouter from './routes/UserRoutes.js'
 import ocrRouter from './routes/ocrRoutes.js'
+import geminiRoutes from './routes/geminiRoutes.js'
 
 dotenv.config();
 const app = express();
@@ -11,6 +12,7 @@ app.use(cors());
 app.use(express.json());
 app.use('/api/user', userRouter)
 app.use('/api/ocr',ocrRouter)
+app.use('/api/gemini',geminiRoutes)
 
 await connectDB();
 
