@@ -38,11 +38,11 @@ export const extractTextFromImage = async (req, res) => {
       return res.status(500).json({ success: false, message: "OCR failed to extract text" })
     }
 
-    const extractedText = parsedResults[0].ParsedText
+    const resultText = parsedResults[0].ParsedText
     console.log("Text extracted successfully")
-    console.log("Extracted Text:", extractedText)
+    console.log("Extracted Text:", resultText)
 
-    res.json({ success: true, extractedText })
+    res.json({ success: true, resultText })
   } catch (error) {
     console.error("OCR error:", error.message)
     res.status(500).json({ success: false, message: "OCR failed", error: error.message })
