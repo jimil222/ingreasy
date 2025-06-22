@@ -42,6 +42,7 @@ const Dashboard = () => {
   const tabs = [
     { label: "Scan", path: "/dashboard" },
     { label: "History", path: "/dashboard/history" },
+    { label: "Recent", path: "/dashboard/results" },
     { label: "Profile", path: "/dashboard/profile" }
   ]
 

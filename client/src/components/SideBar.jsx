@@ -1,4 +1,4 @@
-import { Camera, History, User, X, Menu } from "lucide-react"
+import { Camera, History, User, X, Menu, Clock } from "lucide-react"
 import { useLocation, useNavigate } from "react-router-dom"
 
 const Sidebar = ({ isMobileMenuOpen, setIsMobileMenuOpen }) => {
@@ -8,7 +8,8 @@ const Sidebar = ({ isMobileMenuOpen, setIsMobileMenuOpen }) => {
   const menuItems = [
     { path: "/dashboard", label: "Scan", icon: Camera },
     { path: "/dashboard/history", label: "History", icon: History },
-    { path: "/dashboard/profile", label: "Profile", icon: User },
+    { path: "/dashboard/results", label: "Recent", icon: Clock },
+    { path: "/dashboard/profile", label: "Profile", icon: User }
   ]
 
   return (
@@ -54,10 +55,10 @@ const Sidebar = ({ isMobileMenuOpen, setIsMobileMenuOpen }) => {
                     navigate(item.path)
                     setIsMobileMenuOpen(false)
                   }}
-                  className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors ${
+                  className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors hover ${
                     isActive
                       ? "bg-orange-100 text-orange-600 border-r-4 border-orange-500"
-                      : "text-gray-600 hover:bg-gray-100"
+                      : "text-gray-600 hover:bg-orange-100"
                   }`}
                 >
                   <Icon className="w-5 h-5" />
