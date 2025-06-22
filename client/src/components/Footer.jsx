@@ -44,9 +44,9 @@ const Footer = () => {
         <div className="border-t border-white/10 pt-8 flex flex-col md:flex-row items-center justify-between">
           <div className="flex items-center space-x-2 text-gray-300 mb-4 md:mb-0">
             <span>Made with</span>
-            <Heart className="w-4 h-4 text-red-400" />
+            <Heart className="w-4 h-4 text-orange-400" />
             <span>
-              by <span className="text-emerald-400 font-semibold">Jimil</span> | Ingreasy 2025
+              by <span className="text-orange-400 font-semibold">Jimil</span> | Ingreasy 2025
             </span>
           </div>
           <div className="text-gray-400 text-sm">© 2025 Ingreasy. All rights reserved.</div>
