@@ -1,64 +1,59 @@
-import { Clock, Users, ChefHat, CheckCircle } from "lucide-react"
+import { Clock, Users, ChefHat, CheckCircle, DownloadIcon } from "lucide-react"
 import { useState } from "react"
-
+import { useRecipe } from "../context/RecipeContext"
+import jsPDF from "jspdf"
+import "jspdf-autotable"
 const RecipeDisplay = () => {
+  const { recipes } = useRecipe()
   const [checkedSteps, setCheckedSteps] = useState({})
 
-  const recipes = [
-    {
-      title: "Parle-G Chocolate Pudding",
-      ingredients: ["1 packet Parle-G biscuits", "2 tbsp cocoa powder", "1/2 cup milk", "2 tbsp sugar"],
-      steps: [
-        "Crush the biscuits finely.",
-        "Mix cocoa powder and sugar in milk.",
-        "Combine with biscuit crumbs and stir well.",
-        "Refrigerate for 1 hour and serve chilled.",
-      ],
-      prepTime: "10 mins",
-      cookTime: "5 mins",
-      servings: "2",
-    },
-    {
-      title: "Quick Vegetable Stir Fry",
-      ingredients: [
-        "2 cups mixed vegetables",
-        "2 tbsp oil",
-        "1 tsp ginger-garlic paste",
-        "1 tsp soy sauce",
-        "Salt to taste",
-      ],
-      steps: [
-        "Heat oil in a pan over medium heat.",
-        "Add ginger-garlic paste and sauté for 30 seconds.",
-        "Add mixed vegetables and stir fry for 5-7 minutes.",
-        "Add soy sauce and salt, mix well and serve hot.",
-      ],
-      prepTime: "5 mins",
-      cookTime: "10 mins",
-      servings: "3",
-    },
-    {
-      title: "Simple Pasta Delight",
-      ingredients: [
-        "200g pasta",
-        "3 tbsp olive oil",
-        "4 cloves garlic",
-        "1 cup cherry tomatoes",
-        "Fresh basil leaves",
-        "Parmesan cheese",
-      ],
-      steps: [
-        "Boil pasta according to package instructions.",
-        "Heat olive oil and sauté minced garlic until fragrant.",
-        "Add cherry tomatoes and cook until they burst.",
-        "Toss cooked pasta with the sauce and fresh basil.",
-        "Serve hot with grated Parmesan cheese.",
-      ],
-      prepTime: "8 mins",
-      cookTime: "15 mins",
-      servings: "4",
-    },
-  ]
+  const handleDownload = (recipe) => {
+    const doc = new jsPDF()
+
+    // Title
+    doc.setFontSize(18)
+    doc.text(recipe.title, 20, 20)
+
+    // Details
+    doc.setFontSize(12)
+    doc.text(`Prep Time: ${recipe.prepTime}`, 20, 30)
+    doc.text(`Cook Time: ${recipe.cookTime}`, 20, 37)
+    doc.text(`Servings: ${recipe.servings}`, 20, 44)
+
+    // Ingredients
+    doc.setFontSize(14)
+    doc.text("Ingredients:", 20, 55)
+    doc.setFontSize(12)
+    let y = 63
+    recipe.ingredients.forEach((item, i) => {
+      doc.text(`- ${item}`, 25, y)
+      y += 7
+    })
+
+    // Steps
+    y += 10
+    doc.setFontSize(14)
+    doc.text("Instructions:", 20, y)
+    y += 8
+    doc.setFontSize(12)
+    recipe.steps.forEach((step, i) => {
+      doc.text(`${i + 1}. ${step}`, 25, y)
+      y += 7
+      if (y > 280) {
+        doc.addPage()
+        y = 20
+      }
+    })
+
+    doc.save(`${recipe.title.replace(/\s+/g, "_")}_Recipe.pdf`)
+  }
+
+  // For displaying only time and avoiding rest
+  const cleanTime = (time) => {
+    if (!time) return ""
+    const cleaned = time.replace(/\s*\(.*?\)/g, "").trim()
+    return cleaned === "0" || cleaned === "0 minutes" ? "N/A" : cleaned
+  }
 
   const toggleStep = (recipeIndex, stepIndex) => {
     const key = `${recipeIndex}-${stepIndex}`
@@ -82,14 +77,14 @@ const RecipeDisplay = () => {
     <div className="p-4 lg:p-8 pl-16 lg:pl-8">
       <div className="mb-8">
         <h1 className="text-center text-2xl lg:text-3xl font-bold text-gray-800 mb-2">Recipe Suggestions</h1>
-        <p className="text-center text-gray-600">Here are some delicious recipes based on your ingredients</p>
+        <p className="text-center text-gray-600">Here are some delicious recipes based on your grocery item</p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6 max-w-7xl mx-auto">
         {recipes.map((recipe, recipeIndex) => (
           <div
             key={recipeIndex}
-            className="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-shadow overflow-hidden"
+            className="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-shadow overflow-hidden flex flex-col"
           >
             {/* Recipe Header */}
             <div className="bg-gradient-to-r from-orange-500 to-orange-600 p-6 text-white">
@@ -98,11 +93,11 @@ const RecipeDisplay = () => {
               <div className="flex items-center justify-between text-sm">
                 <div className="flex items-center space-x-1">
                   <Clock className="w-4 h-4" />
-                  <span>Prep: {recipe.prepTime}</span>
+                  <span>Prep: {cleanTime(recipe.prepTime)}</span>
                 </div>
                 <div className="flex items-center space-x-1">
                   <Clock className="w-4 h-4" />
-                  <span>Cook: {recipe.cookTime}</span>
+                  <span>Cook: {cleanTime(recipe.cookTime)}</span>
                 </div>
                 <div className="flex items-center space-x-1">
                   <Users className="w-4 h-4" />
@@ -112,7 +107,7 @@ const RecipeDisplay = () => {
             </div>
 
             {/* Recipe Content */}
-            <div className="p-6">
+            <div className="p-6 flex flex-col h-full">
               {/* Ingredients Section */}
               <div className="mb-6">
                 <h3 className="text-lg font-semibold text-gray-800 mb-3 flex items-center">
@@ -139,11 +134,10 @@ const RecipeDisplay = () => {
                       <li key={stepIndex} className="flex items-start space-x-3">
                         <button
                           onClick={() => toggleStep(recipeIndex, stepIndex)}
-                          className={`flex-shrink-0 w-6 h-6 rounded-full border-2 flex items-center justify-center transition-colors ${
-                            isChecked
-                              ? "bg-green-500 border-green-500 text-white"
-                              : "border-gray-300 hover:border-orange-500"
-                          }`}
+                          className={`flex-shrink-0 w-6 h-6 rounded-full border-2 flex items-center justify-center transition-colors ${isChecked
+                            ? "bg-green-500 border-green-500 text-white"
+                            : "border-gray-300 hover:border-orange-500"
+                            }`}
                         >
                           {isChecked ? (
                             <CheckCircle className="w-4 h-4" />
@@ -152,9 +146,8 @@ const RecipeDisplay = () => {
                           )}
                         </button>
                         <span
-                          className={`text-sm text-gray-700 leading-relaxed ${
-                            isChecked ? "line-through text-gray-400" : ""
-                          }`}
+                          className={`text-sm text-gray-700 leading-relaxed ${isChecked ? "line-through text-gray-400" : ""
+                            }`}
                         >
                           {step}
                         </span>
@@ -164,15 +157,18 @@ const RecipeDisplay = () => {
                 </ol>
               </div>
 
-              {/* Action Buttons */}
-              <div className="flex space-x-3 pt-4 border-t border-gray-100">
-                <button className="flex-1 px-4 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition-colors text-sm font-medium">
-                  Save Recipe
-                </button>
-                <button className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors text-sm font-medium">
-                  Share
+              <div className="pt-4 mt-auto flex justify-center">
+                <button
+                  onClick={() => handleDownload(recipe)}
+                  className="text-center w-[90%] px-4 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition-colors text-sm font-medium flex items-center justify-center space-x-2"
+                >
+                  <span className="flex items-center justify-center gap-2">
+                    Download
+                    <DownloadIcon className="w-4 h-4" strokeWidth={2.5} />
+                  </span>
                 </button>
               </div>
+
             </div>
           </div>
         ))}
