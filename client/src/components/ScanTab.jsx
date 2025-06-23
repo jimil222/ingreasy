@@ -63,6 +63,14 @@
         setRecipes(geminiResponse.data);
         localStorage.setItem("latestRecipe", JSON.stringify(geminiResponse.data));
         console.log(geminiResponse.data);
+        await axios.post("http://localhost:4000/api/recipes/save-recipe",{
+          detectedText : resultText,
+          recipes: geminiResponse.data
+        },{
+          headers:{
+          Authorization: `Bearer ${token}`,
+          }
+        })
         navigate('/dashboard/results')
         // console.log(recipes);
         
