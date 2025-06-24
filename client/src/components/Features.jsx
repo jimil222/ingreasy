@@ -18,7 +18,12 @@ const CTASection = () => {
         </p>
 
         <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
-          <button className="px-8 py-4 bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-full font-semibold text-lg hover:shadow-xl transition-all flex items-center space-x-2 justify-center">
+          <button className="px-8 py-4 bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-full font-semibold text-lg hover:shadow-xl transition-all flex items-center space-x-2 justify-center" onClick={() =>
+            window.open(
+              "https://drive.google.com/file/d/1TCt7Sr3aG1SRa9jXMSSEcjBo8CrrxzNt/preview",
+              "_blank"
+            )
+          }>
             <span>View demo</span>
             <ArrowRight className="w-5 h-5" />
           </button>
@@ -29,4 +34,3 @@ const CTASection = () => {
 }
 
 export default CTASection
-  

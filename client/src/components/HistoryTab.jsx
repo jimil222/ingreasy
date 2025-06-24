@@ -3,6 +3,9 @@ import { useEffect, useState } from "react"
 import { downloadRecipeAsPDF } from "../utils/pdfHelper"
 import axios from "axios"
 import { useAuth } from "@clerk/clerk-react"
+import RecipeSkeleton from "./RecipeSkeleton"
+import { useRecipe } from "../context/RecipeContext"
+
 
 const cleanTime = (time) => {
   if (!time) return ""
@@ -13,26 +16,38 @@ const cleanTime = (time) => {
 const History = () => {
   const [checkedSteps, setCheckedSteps] = useState({})
   const [recipeHistory, setRecipeHistory] = useState([])
+  const [loading, setLoading] = useState(true)
   const { getToken } = useAuth()
 
   useEffect(() => {
     const fetchHistory = async () => {
-      const token = await getToken({ template: "backend-auth" })
-      const res = await axios.get("http://localhost:4000/api/recipes/history", {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      })
-      const grouped = {}
-      res.data.recipes.forEach(recipe => {
-        const date = new Date(recipe.createdAt).toISOString().split("T")[0]  // "2025-06-23"
-        if (!grouped[date]) grouped[date] = []
-        grouped[date].push(recipe)
-      })
+      try {
+        const token = await getToken({ template: "backend-auth" })
+        const res = await axios.get("http://localhost:4000/api/recipes/history", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
 
-      const groupedArray = Object.entries(grouped).map(([date, recipes]) => ({ date, recipes }))
-      setRecipeHistory(groupedArray)
+        const grouped = {}
+        res.data.recipes.forEach((recipe) => {
+          const date = new Date(recipe.createdAt).toISOString().split("T")[0]
+          if (!grouped[date]) grouped[date] = []
+          grouped[date].push(recipe)
+        })
+
+        const groupedArray = Object.entries(grouped).map(([date, recipes]) => ({
+          date,
+          recipes,
+        }))
+        setRecipeHistory(groupedArray)
+      } catch (err) {
+        console.error("Failed to fetch history", err)
+      } finally {
+        setLoading(false)
+      }
     }
+
     fetchHistory()
   }, [])
 
@@ -49,7 +64,14 @@ const History = () => {
   }
 
   if (!recipeHistory || recipeHistory.length === 0) {
-    return (
+    return loading ? (
+      // Show 3x3 grid of RecipeSkeletons as placeholder while loading
+      <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6 max-w-7xl mx-auto p-6">
+        {[...Array(6)].map((_, i) => (
+          <RecipeSkeleton key={i} />
+        ))}
+      </div>
+    ) : (
       <div className="text-center py-12">
         <ChefHat className="w-16 h-16 text-gray-400 mx-auto mb-4" />
         <h3 className="text-xl font-semibold text-gray-600 mb-2">No Recipes Generated Earlier</h3>
@@ -57,6 +79,7 @@ const History = () => {
       </div>
     )
   }
+
 
   return (
     <div className="p-4 lg:p-8 pl-16 lg:pl-8">
