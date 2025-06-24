@@ -50,7 +50,7 @@ export const getProfileData = async (req, res) => {
       success: true,
       profile: {
         email: user.email,
-        name: `${user.firstName} ${user.lastName}`,
+        name: `${user.firstName} ${user.lastName || ""}`.trim(),
         joinedAt: dateOnly,
         recipeCount,
         daysActive,
