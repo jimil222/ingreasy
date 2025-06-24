@@ -39,7 +39,7 @@
           <div className="flex items-center gap-4">
             {isSignedIn ? (
               <>
-                <p className="hidden sm:block text-white font-medium bg-orange-500 p-2 rounded-md">Hi, {user.fullName}</p>
+                <p className="hidden sm:block text-orange-600 font-medium bg-orange-100 p-2 rounded-md">Hi, {user.fullName}</p>
                 <UserButton afterSignOutUrl="/" />
               </>
             ) : (
