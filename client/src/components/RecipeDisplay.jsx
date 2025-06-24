@@ -1,51 +1,14 @@
 import { Clock, Users, ChefHat, CheckCircle, DownloadIcon } from "lucide-react"
 import { useState } from "react"
 import { useRecipe } from "../context/RecipeContext"
-import jsPDF from "jspdf"
-import "jspdf-autotable"
+import { downloadRecipeAsPDF } from "../utils/pdfHelper"
+
 const RecipeDisplay = () => {
   const { recipes } = useRecipe()
   const [checkedSteps, setCheckedSteps] = useState({})
 
   const handleDownload = (recipe) => {
-    const doc = new jsPDF()
-
-    // Title
-    doc.setFontSize(18)
-    doc.text(recipe.title, 20, 20)
-
-    // Details
-    doc.setFontSize(12)
-    doc.text(`Prep Time: ${recipe.prepTime}`, 20, 30)
-    doc.text(`Cook Time: ${recipe.cookTime}`, 20, 37)
-    doc.text(`Servings: ${recipe.servings}`, 20, 44)
-
-    // Ingredients
-    doc.setFontSize(14)
-    doc.text("Ingredients:", 20, 55)
-    doc.setFontSize(12)
-    let y = 63
-    recipe.ingredients.forEach((item, i) => {
-      doc.text(`- ${item}`, 25, y)
-      y += 7
-    })
-
-    // Steps
-    y += 10
-    doc.setFontSize(14)
-    doc.text("Instructions:", 20, y)
-    y += 8
-    doc.setFontSize(12)
-    recipe.steps.forEach((step, i) => {
-      doc.text(`${i + 1}. ${step}`, 25, y)
-      y += 7
-      if (y > 280) {
-        doc.addPage()
-        y = 20
-      }
-    })
-
-    doc.save(`${recipe.title.replace(/\s+/g, "_")}_Recipe.pdf`)
+      downloadRecipeAsPDF(recipe)
   }
 
   // For displaying only time and avoiding rest
