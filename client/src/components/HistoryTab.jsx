@@ -23,7 +23,7 @@ const History = () => {
     const fetchHistory = async () => {
       try {
         const token = await getToken({ template: "backend-auth" })
-        const res = await axios.get("http://localhost:4000/api/recipes/history", {
+        const res = await axios.get("https://ingreasy-backend.onrender.com/api/recipes/history", {
           headers: {
             Authorization: `Bearer ${token}`,
           },
