@@ -17,7 +17,7 @@ const Dashboard = () => {
 
       try {
         const token = await getToken({ template: "backend-auth" })
-        await axios.post("http://localhost:4000/api/user/save",
+        await axios.post("https://ingreasy-backend.onrender.com/api/user/save",
           {
             clerkId: user.id,
             email: user.primaryEmailAddress.emailAddress,
