@@ -1,5 +1,3 @@
-import path from 'path'
-import fs from 'fs'
 import axios from 'axios'
 import FormData from 'form-data'
 import dotenv from 'dotenv'
@@ -15,15 +13,14 @@ export const extractTextFromImage = async (req, res) => {
       return res.status(400).json({ success: false, message: "No image uploaded" })
     }
 
-    const imagePath = path.join('uploads', req.file.filename)
-    const absolutePath = path.resolve(imagePath)
-    console.log("Image path:", absolutePath)
-
     const formData = new FormData()
     formData.append('apikey', process.env.OCR_API_KEY)
     formData.append('language', 'eng')
     formData.append('isOverlayRequired', 'false')
-    formData.append('file', fs.createReadStream(absolutePath))
+    formData.append('file', req.file.buffer, {
+      filename: req.file.originalname,
+      contentType: req.file.mimetype,
+    })
 
     console.log("Sending request to OCR.Space API...")
 
