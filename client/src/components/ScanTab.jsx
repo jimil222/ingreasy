@@ -36,7 +36,7 @@
         const token = await getToken({ template: "backend-auth" })
 
         const response = await axios.post(
-          "http://localhost:4000/api/ocr/extract",
+          "https://ingreasy-backend.onrender.com/api/ocr/extract",
           formData,
           {
             headers: {
@@ -51,7 +51,7 @@
         console.log("Sending text to Gemini:", resultText)
         // Gemini step (get 3 recipes)
         const geminiResponse = await axios.post(
-          "http://localhost:4000/api/gemini/generate-recipe",
+          "https://ingreasy-backend.onrender.com/api/gemini/generate-recipe",
           { resultText },
           {
             headers: {
@@ -63,7 +63,7 @@
         setRecipes(geminiResponse.data);
         localStorage.setItem("latestRecipe", JSON.stringify(geminiResponse.data));
         console.log(geminiResponse.data);
-        await axios.post("http://localhost:4000/api/recipes/save-recipe",{
+        await axios.post("https://ingreasy-backend.onrender.com/api/recipes/save-recipe",{
           detectedText : resultText,
           recipes: geminiResponse.data
         },{
