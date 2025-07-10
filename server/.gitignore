@@ -6,6 +6,12 @@ node_modules/
 
 uploads/
 
+uploads/
+
+ingreasy-vision-key.json
+
+google-key.json
+
 # Logs
 logs
 *.log

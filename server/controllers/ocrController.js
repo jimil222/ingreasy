@@ -1,43 +1,34 @@
-import axios from 'axios'
-import FormData from 'form-data'
-import dotenv from 'dotenv'
+import vision from "@google-cloud/vision"
+import dotenv from "dotenv"
 
 dotenv.config()
 
+const client = new vision.ImageAnnotatorClient({
+  keyFilename: process.env.GOOGLE_APPLICATION_CREDENTIALS,
+})
+
 export const extractTextFromImage = async (req, res) => {
   try {
-    console.log("OCR request received")
+    console.log("OCR request received using Google Vision API")
 
     if (!req.file) {
       console.log("No file received")
       return res.status(400).json({ success: false, message: "No image uploaded" })
     }
 
-    const formData = new FormData()
-    formData.append('apikey', process.env.OCR_API_KEY)
-    formData.append('language', 'eng')
-    formData.append('isOverlayRequired', 'false')
-    formData.append('file', req.file.buffer, {
-      filename: req.file.originalname,
-      contentType: req.file.mimetype,
+    const [result] = await client.textDetection({
+      image: { content: req.file.buffer },
     })
 
-    console.log("Sending request to OCR.Space API...")
+    const detections = result.textAnnotations
 
-    const response = await axios.post('https://api.ocr.space/parse/image', formData, {
-      headers: formData.getHeaders(),
-    })
-
-    const parsedResults = response.data.ParsedResults
-
-    if (!parsedResults || parsedResults.length === 0) {
-      console.log("OCR.Space returned no results")
-      return res.status(500).json({ success: false, message: "OCR failed to extract text" })
+    if (!detections || detections.length === 0) {
+      console.log("No text detected")
+      return res.status(500).json({ success: false, message: "No text detected" })
     }
 
-    const resultText = parsedResults[0].ParsedText
-    console.log("Text extracted successfully")
-    console.log("Extracted Text:", resultText)
+    const resultText = detections[0].description
+    console.log("Text extracted successfully:", resultText)
 
     res.json({ success: true, resultText })
   } catch (error) {
