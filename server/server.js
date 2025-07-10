@@ -7,7 +7,7 @@ import ocrRouter from './routes/ocrRoutes.js'
 import geminiRoutes from './routes/geminiRoutes.js'
 import recipeRoutes from './routes/recipeRoutes.js'
 dotenv.config();
-import { setupGoogleCredentials } from './configs/googleAuthSetUp.js';
+import { setupGoogleCredentials } from './configs/googleAuthSetup.js';
 setupGoogleCredentials()
 const app = express();
 app.use(cors());
