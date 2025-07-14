@@ -6,6 +6,7 @@ import userRouter from './routes/UserRoutes.js'
 import ocrRouter from './routes/ocrRoutes.js'
 import geminiRoutes from './routes/geminiRoutes.js'
 import recipeRoutes from './routes/recipeRoutes.js'
+import axios from 'axios';
 dotenv.config();
 import { setupGoogleCredentials } from './configs/googleAuthSetup.js';
 setupGoogleCredentials()
