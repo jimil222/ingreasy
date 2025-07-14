@@ -11,7 +11,7 @@ import { setupGoogleCredentials } from './configs/googleAuthSetup.js';
 setupGoogleCredentials()
 const app = express();
 
-const url = `https://render-hosting-se2b.onrender.com`;
+const url = `https://ingreasy-backend.onrender.com/`;
 const interval = 30000;
 
 function reloadWebsite() {
