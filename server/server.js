@@ -13,7 +13,7 @@ setupGoogleCredentials()
 const app = express();
 
 const url = `https://ingreasy-backend.onrender.com/`;
-const interval = 5 * 60 * 1000; 
+const interval = 10 * 60 * 1000; 
 
 function reloadWebsite() {
   axios
