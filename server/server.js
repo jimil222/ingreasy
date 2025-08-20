@@ -6,30 +6,34 @@ import userRouter from './routes/UserRoutes.js'
 import ocrRouter from './routes/ocrRoutes.js'
 import geminiRoutes from './routes/geminiRoutes.js'
 import recipeRoutes from './routes/recipeRoutes.js'
-import axios from 'axios';
+// import axios from 'axios';
 dotenv.config();
 import { setupGoogleCredentials } from './configs/googleAuthSetup.js';
 setupGoogleCredentials()
 const app = express();
 
-const url = `https://ingreasy-backend.onrender.com/`;
-const interval = 10 * 60 * 1000; 
+// const url = `https://ingreasy-backend.onrender.com/`;
+// const interval = 10 * 60 * 1000; 
 
-function reloadWebsite() {
-  axios
-    .get(url)
-    .then((response) => {
-      console.log("website reloded");
-    })
-    .catch((error) => {
-      console.error(`Error : ${error.message}`);
-    });
-}
+// function reloadWebsite() {
+//   axios
+//     .get(url)
+//     .then((response) => {
+//       console.log("website reloded");
+//     })
+//     .catch((error) => {
+//       console.error(`Error : ${error.message}`);
+//     });
+// }
 
-setInterval(reloadWebsite, interval);
+// setInterval(reloadWebsite, interval);
 
 app.use(cors());
 app.use(express.json());
+app.get("/", (req, res) => {
+  console.log(`[${new Date().toLocaleString()}] Ping received`);
+  res.send("Server is alive");
+});
 app.use('/api/user', userRouter)
 app.use('/api/ocr',ocrRouter)
 app.use('/api/gemini',geminiRoutes)
